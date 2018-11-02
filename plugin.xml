@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse version="3.0"?>
+
+<plugin name="OntoPLC Plugin" version="1.0.0">
+   <extension id="cellfie" point="org.protege.editor.core.application.EditorKitMenuAction">
+      <name value="OntoPLC" />
+      <toolTip value="Convert PLC to OWL" />
+      <class value="org.mm.cellfie.action.CellfieAction" />
+      <path value="org.protege.editor.owl.menu.tools/SlotG-A"></path>
+      <editorKitId value="OWLEditorKit" />
+   </extension>
+</plugin>
