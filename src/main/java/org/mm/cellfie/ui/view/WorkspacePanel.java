@@ -66,7 +66,7 @@ public class WorkspacePanel extends JPanel
    private MMApplication application;
    private MMApplicationFactory applicationFactory = new MMApplicationFactory();
 
-   public WorkspacePanel(OWLOntology ontology, String workbookFilePath, OWLEditorKit editorKit, DialogManager dialogHelper)
+   public WorkspacePanel(OWLOntology ontology, String PLCFilePath, OWLEditorKit editorKit, DialogManager dialogHelper)
    {
       this.ontology = ontology;
       this.editorKit = editorKit;
@@ -90,21 +90,21 @@ public class WorkspacePanel extends JPanel
       splitPane.setResizeWeight(0.4);
       add(splitPane, BorderLayout.CENTER);
 
-      loadWorkbookDocument(workbookFilePath);
+      // loadWorkbookDocument(PLCFilePath);
 //      loadTransformationRuleDocument(ruleFilePath) // XXX In case the UI will allow users to input rule file in advance
-      setupApplication();
+      // setupApplication();
 
       /*
        * Workbook sheet GUI presentation
        */
-      dataSourceView = new DataSourceView(this);
-      splitPane.setTopComponent(dataSourceView);
+      // dataSourceView = new DataSourceView(this);
+      // splitPane.setTopComponent(dataSourceView);
 
       /*
        * Transformation rule browser, create, edit, remove panel
        */
-      transformationRuleBrowserView = new TransformationRuleBrowserView(this);
-      splitPane.setBottomComponent(transformationRuleBrowserView);
+      // transformationRuleBrowserView = new TransformationRuleBrowserView(this);
+      // splitPane.setBottomComponent(transformationRuleBrowserView);
 
       validate();
    }
@@ -267,11 +267,11 @@ public class WorkspacePanel extends JPanel
       return transformationRuleBrowserView;
    }
 
-   public static JDialog createDialog(OWLOntology ontology, String workbookPath, OWLEditorKit editorKit, DialogManager dialogHelper)
+   public static JDialog createDialog(OWLOntology ontology, String PLCFilePath, OWLEditorKit editorKit, DialogManager dialogHelper)
    {
-      final JDialog dialog = new JDialog(null, "Cellfie", Dialog.ModalityType.MODELESS);
+      final JDialog dialog = new JDialog(null, "OntoPLC", Dialog.ModalityType.MODELESS);
       
-      final WorkspacePanel workspacePanel = new WorkspacePanel(ontology, workbookPath, editorKit, dialogHelper);
+      final WorkspacePanel workspacePanel = new WorkspacePanel(ontology, PLCFilePath, editorKit, dialogHelper);
       workspacePanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "CLOSE_DIALOG");
       workspacePanel.getActionMap().put("CLOSE_DIALOG", new AbstractAction() // Closing Cellfie using ESC key
       {
