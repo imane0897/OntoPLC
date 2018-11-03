@@ -85,7 +85,6 @@ public class WorkspacePanel extends JPanel
             splitPane.setResizeWeight(0.4);
             add(splitPane, BorderLayout.CENTER);
 
-
             /*
              * Transformation rule browser, create, edit, remove panel
              */
@@ -117,6 +116,19 @@ public class WorkspacePanel extends JPanel
             }
             sb.append(")");
             return sb.toString();
+      }
+      
+      /**
+       * Get the file location of the input transformation rule.
+       *
+       * @return the file path location.
+       */
+      public Optional<String> getRuleFileLocation() {
+            return Optional.ofNullable(applicationFactory.getRuleFileLocation());
+      }
+      
+      public DialogManager getApplicationDialogManager() {
+            return dialogHelper;
       }
 
       public static JDialog createDialog(OWLOntology ontology, String PLCFilePath, OWLEditorKit editorKit,
