@@ -2,7 +2,7 @@
 <?eclipse version="3.0"?>
 
 <plugin name="OntoPLC Plugin" version="1.0.0">
-   <extension id="cellfie" point="org.protege.editor.core.application.EditorKitMenuAction">
+   <extension id="OntoPLC" point="org.protege.editor.core.application.EditorKitMenuAction">
       <name value="OntoPLC" />
       <toolTip value="Convert PLC to OWL" />
       <class value="org.mm.cellfie.action.CellfieAction" />

@@ -34,7 +34,7 @@ public class CellfieAction extends ProtegeOWLAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      File file = dialogManager.showOpenFileChooser(null, "Open Excel Workbook", "xlsx, xls", "Excel Workbook (.xlsx, .xls)");
+      File file = dialogManager.showOpenFileChooser(null, "Open PLC Project", "xml", "XML File (.xml)");
       if (file != null) {
          String filename = file.getAbsolutePath();
          try {
