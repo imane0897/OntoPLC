@@ -46,7 +46,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
-// import org.mm.cellfie.ui.exception.*;
+// import org.mm.cellfie.ui.exception.CellfieException;
+// import org.mm.cellfie.core;
 import org.mm.ui.DialogManager;
 import org.mm.ui.ModelView;
 import org.protege.editor.core.ui.util.ComponentFactory;
@@ -60,6 +61,18 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView
 
       private JPanel pnlContainer;
 
+      private JButton cmdAdd;
+      private JButton cmdEdit;
+      private JButton cmdDelete;
+      private JButton cmdSave;
+      private JButton cmdSaveAs;
+      private JButton cmdGenerateAxioms;
+
+      private JTable tblTransformationRules;
+      // private CheckBoxHeaderRenderer tblHeaderRenderer;
+
+      // private TransformationRulesTableModel tableModel;
+
       public TransformationRuleBrowserView(WorkspacePanel container)
       {
             this.container = container;
@@ -71,35 +84,35 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView
             pnlContainer.setLayout(new BorderLayout());
             add(pnlContainer, BorderLayout.CENTER);
 
-            // tblTransformationRules = new JTable();
-            // tblTransformationRules.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            // tblTransformationRules.setGridColor(new Color(220, 220, 220));
+            tblTransformationRules = new JTable();
+            tblTransformationRules.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+            tblTransformationRules.setGridColor(new Color(220, 220, 220));
             // tblTransformationRules.setDefaultRenderer(String.class, new MultiLineCellRenderer());
             // tblTransformationRules.addMouseListener(new MappingExpressionSelectionListener());
-            // tblTransformationRules.getInputMap(JTable.WHEN_IN_FOCUSED_WINDOW)
-            //             .put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0), "ADD_RULE");
+            tblTransformationRules.getInputMap(JTable.WHEN_IN_FOCUSED_WINDOW)
+                        .put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0), "ADD_RULE");
             // tblTransformationRules.getActionMap().put("ADD_RULE", new AddRuleAction());
-            // tblTransformationRules.getInputMap(JTable.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
-            //             "EDIT_RULE");
+            tblTransformationRules.getInputMap(JTable.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+                        "EDIT_RULE");
             // tblTransformationRules.getActionMap().put("EDIT_RULE", new EditRuleAction());
-            // tblTransformationRules.getInputMap(JTable.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
-            //             "DELETE_RULE");
-            // tblTransformationRules.getInputMap(JTable.WHEN_FOCUSED)
-            //             .put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "DELETE_RULE");
+            tblTransformationRules.getInputMap(JTable.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0),
+                        "DELETE_RULE");
+            tblTransformationRules.getInputMap(JTable.WHEN_FOCUSED)
+                        .put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), "DELETE_RULE");
             // tblTransformationRules.getActionMap().put("DELETE_RULE", new DeleteRuleAction());
-            // tblTransformationRules.getInputMap(JTable.WHEN_FOCUSED)
-            //             .put(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK), "SELECT_ALL_RULES");
-            // tblTransformationRules.getInputMap(JTable.WHEN_IN_FOCUSED_WINDOW)
-            //             .put(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK), "SELECT_ALL_RULES");
+            tblTransformationRules.getInputMap(JTable.WHEN_FOCUSED)
+                        .put(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK), "SELECT_ALL_RULES");
+            tblTransformationRules.getInputMap(JTable.WHEN_IN_FOCUSED_WINDOW)
+                        .put(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK), "SELECT_ALL_RULES");
             // tblTransformationRules.getActionMap().put("SELECT_ALL_RULES", new SelectAllRulesAction());
-            // tblTransformationRules.getInputMap(JTable.WHEN_IN_FOCUSED_WINDOW)
-            //             .put(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK), "DESELECT_ALL_RULES");
+            tblTransformationRules.getInputMap(JTable.WHEN_IN_FOCUSED_WINDOW)
+                        .put(KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_DOWN_MASK), "DESELECT_ALL_RULES");
             // tblTransformationRules.getActionMap().put("DESELECT_ALL_RULES", new DeselectAllRulesAction());
 
             // tblTransformationRules.setColumnModel(new TransformationRulesColumnModel());
             // tblHeaderRenderer = new CheckBoxHeaderRenderer(tblTransformationRules.getTableHeader());
 
-            // JScrollPane scrMappingExpression = new JScrollPane(tblTransformationRules);
+            JScrollPane scrMappingExpression = new JScrollPane(tblTransformationRules);
 
             JPanel pnlTop = new JPanel(new BorderLayout());
             pnlTop.setBorder(new EmptyBorder(2, 5, 7, 5));
@@ -108,22 +121,22 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView
             JPanel pnlCommandButton = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             pnlTop.add(pnlCommandButton, BorderLayout.WEST);
 
-            // cmdAdd = new JButton("Add");
-            // cmdAdd.setPreferredSize(new Dimension(72, 22));
+            cmdAdd = new JButton("Add");
+            cmdAdd.setPreferredSize(new Dimension(72, 22));
             // cmdAdd.addActionListener(new AddButtonActionListener());
-            // pnlCommandButton.add(cmdAdd);
+            pnlCommandButton.add(cmdAdd);
 
-            // cmdEdit = new JButton("Edit");
-            // cmdEdit.setPreferredSize(new Dimension(72, 22));
-            // cmdEdit.setEnabled(false);
+            cmdEdit = new JButton("Edit");
+            cmdEdit.setPreferredSize(new Dimension(72, 22));
+            cmdEdit.setEnabled(false);
             // cmdEdit.addActionListener(new EditButtonActionListener());
-            // pnlCommandButton.add(cmdEdit);
+            pnlCommandButton.add(cmdEdit);
 
-            // cmdDelete = new JButton("Delete");
-            // cmdDelete.setPreferredSize(new Dimension(72, 22));
-            // cmdDelete.setEnabled(false);
+            cmdDelete = new JButton("Delete");
+            cmdDelete.setPreferredSize(new Dimension(72, 22));
+            cmdDelete.setEnabled(false);
             // cmdDelete.addActionListener(new DeleteButtonActionListener());
-            // pnlCommandButton.add(cmdDelete);
+            pnlCommandButton.add(cmdDelete);
 
             JPanel pnlMappingOpenSave = new JPanel(new FlowLayout(FlowLayout.RIGHT));
             pnlTop.add(pnlMappingOpenSave, BorderLayout.EAST);
@@ -133,31 +146,31 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView
             // cmdLoad.addActionListener(new OpenMappingAction());
             // pnlMappingOpenSave.add(cmdLoad);
 
-            // cmdSave = new JButton("Save Rules");
-            // cmdSave.setPreferredSize(new Dimension(152, 22));
+            cmdSave = new JButton("Save Rules");
+            cmdSave.setPreferredSize(new Dimension(152, 22));
             // cmdSave.addActionListener(new SaveMappingAction());
-            // cmdSave.setEnabled(false);
-            // pnlMappingOpenSave.add(cmdSave);
+            cmdSave.setEnabled(false);
+            pnlMappingOpenSave.add(cmdSave);
 
-            // cmdSaveAs = new JButton("Save As...");
-            // cmdSaveAs.setPreferredSize(new Dimension(152, 22));
+            cmdSaveAs = new JButton("Save As...");
+            cmdSaveAs.setPreferredSize(new Dimension(152, 22));
             // cmdSaveAs.addActionListener(new SaveAsMappingAction());
-            // cmdSaveAs.setEnabled(false);
-            // pnlMappingOpenSave.add(cmdSaveAs);
+            cmdSaveAs.setEnabled(false);
+            pnlMappingOpenSave.add(cmdSaveAs);
 
             JPanel pnlCenter = new JPanel(new BorderLayout());
             pnlContainer.add(pnlCenter, BorderLayout.CENTER);
 
-            // pnlCenter.add(scrMappingExpression, BorderLayout.CENTER);
+            pnlCenter.add(scrMappingExpression, BorderLayout.CENTER);
 
             JPanel pnlGenerateAxioms = new JPanel();
             pnlContainer.add(pnlGenerateAxioms, BorderLayout.SOUTH);
 
-            // cmdGenerateAxioms = new JButton("Generate Axioms");
-            // cmdGenerateAxioms.setPreferredSize(new Dimension(152, 22));
+            cmdGenerateAxioms = new JButton("Generate Axioms");
+            cmdGenerateAxioms.setPreferredSize(new Dimension(152, 22));
             // cmdGenerateAxioms.addActionListener(new GenerateAxiomsAction(container));
-            // cmdGenerateAxioms.setEnabled(false);
-            // pnlGenerateAxioms.add(cmdGenerateAxioms);
+            cmdGenerateAxioms.setEnabled(false);
+            pnlGenerateAxioms.add(cmdGenerateAxioms);
 
             update();
             validate();
