@@ -1,4 +1,4 @@
-package org.mm.cellfie.ui.exception;
+package org.mm.cellfie.ui.view;
 
 public class CellfieException extends Exception
 {

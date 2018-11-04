@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,6 +31,7 @@ import org.mm.app.MMApplicationModel;
 // import org.mm.cellfie.action.OWLProtegeOntology;
 import org.mm.core.OWLOntologySourceHook;
 // import org.mm.core.TransformationRule;
+import org.mm.cellfie.core.TransformationRule;
 // import org.mm.core.TransformationRuleSet;
 import org.mm.core.settings.ReferenceSettings;
 import org.mm.parser.ASTExpression;
@@ -48,8 +50,7 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.util.OntologyIRIShortFormProvider;
 
-public class WorkspacePanel extends JPanel
-{
+public class WorkspacePanel extends JPanel {
       private static final long serialVersionUID = 1L;
 
       private OWLOntology ontology;
@@ -117,7 +118,39 @@ public class WorkspacePanel extends JPanel
             sb.append(")");
             return sb.toString();
       }
-      
+
+      private MMApplicationModel getApplicationModel() {
+            return application.getApplicationModel();
+      }
+
+      public List<TransformationRule> getActiveTransformationRules() {
+            List<TransformationRule> PLCTransformationRule = new ArrayList<>();
+            return PLCTransformationRule;
+      }
+
+      /* package */ void updateTransformationRuleModel() {
+            // final List<TransformationRule> rules =
+            // getTransformationRuleBrowserView().getSelectedRules();
+            // TransformationRuleSet ruleSet = TransformationRuleSet.create(rules);
+            // getApplicationModel().getTransformationRuleModel().changeTransformationRuleSet(ruleSet);
+      }
+
+      public Renderer getDefaultRenderer() {
+            return getApplicationModel().getDefaultRenderer();
+      }
+
+      public Renderer getLogRenderer() {
+            return getApplicationModel().getLogRenderer();
+      }
+
+      public OWLEditorKit getEditorKit() {
+            return editorKit;
+      }
+
+      public DialogManager getApplicationDialogManager() {
+            return dialogHelper;
+      }
+
       /**
        * Get the file location of the input transformation rule.
        *
@@ -125,10 +158,6 @@ public class WorkspacePanel extends JPanel
        */
       public Optional<String> getRuleFileLocation() {
             return Optional.ofNullable(applicationFactory.getRuleFileLocation());
-      }
-      
-      public DialogManager getApplicationDialogManager() {
-            return dialogHelper;
       }
 
       public static JDialog createDialog(OWLOntology ontology, String PLCFilePath, OWLEditorKit editorKit,
@@ -148,7 +177,7 @@ public class WorkspacePanel extends JPanel
                         switch (answer) {
                         case JOptionPane.YES_OPTION:
                               // if (workspacePanel.shouldClose()) {
-                                    dialog.setVisible(false);
+                              dialog.setVisible(false);
                               // }
                         }
                   }
@@ -159,7 +188,7 @@ public class WorkspacePanel extends JPanel
                   @Override
                   public void windowClosing(WindowEvent e) {
                         // if (workspacePanel.shouldClose()) {
-                              dialog.setVisible(false);
+                        dialog.setVisible(false);
                         // }
                   }
             });
