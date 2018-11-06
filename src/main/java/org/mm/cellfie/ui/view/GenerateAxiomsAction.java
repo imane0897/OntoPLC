@@ -14,8 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.apache.poi.ss.usermodel.Sheet;
-import org.mm.cellfie.ui.exception.CellfieException;
-import org.mm.core.TransformationRule;
+import org.mm.cellfie.core.TransformationRule;
 import org.mm.core.settings.ReferenceSettings;
 import org.mm.core.settings.ValueEncodingSetting;
 import org.mm.parser.ASTExpression;
@@ -72,35 +71,10 @@ public class GenerateAxiomsAction implements ActionListener
          Set<Rendering> results = new HashSet<Rendering>();
          for (TransformationRule rule : rules) {
             if (rule.isActive()) {
-               String sheetName = rule.getSheetName();
-               Sheet sheet = getActiveWorkbook().getWorkbook().getSheet(sheetName);
-               
-               int startColumnIndex = getStartColumnIndex(rule);
-               int startRowIndex = getStartRowIndex(rule);
-               int endColumnIndex = getEndColumnIndex(rule, sheet, startRowIndex);
-               int endRowIndex = getEndRowIndex(rule, sheet);
-
-               if (startColumnIndex > endColumnIndex) {
-                  throw new CellfieException("Start column after finish column in rule " + rule);
-               }
-               if (startRowIndex > endRowIndex) {
-                  throw new CellfieException("Start row after finish row in rule " + rule);
-               }
-
-               SpreadsheetLocation endLocation = new SpreadsheetLocation(sheetName, endColumnIndex, endRowIndex);
-               SpreadsheetLocation startLocation = new SpreadsheetLocation(sheetName, startColumnIndex, startRowIndex);
-               SpreadsheetLocation currentLocation = new SpreadsheetLocation(sheetName, startColumnIndex, startRowIndex);
-
-               getActiveWorkbook().setCurrentLocation(currentLocation);
                logExpression(rule, logBuilder);
                do {
                   evaluate(rule, results);
                   logEvaluation(rule, logBuilder);
-                  if (currentLocation.equals(endLocation)) {
-                     break;
-                  }
-                  currentLocation = incrementLocation(currentLocation, startLocation, endLocation);
-                  getActiveWorkbook().setCurrentLocation(currentLocation);
                } while (true);
             }
          }
@@ -120,9 +94,7 @@ public class GenerateAxiomsAction implements ActionListener
    private void logExpression(TransformationRule rule, StringBuilder logBuilder)
    {
        logBuilder.append("\n");
-       String additionalInformation = String.format("Cell range: (%s!%s%s:%s%s) Comment: \"%s\"",
-               rule.getSheetName(), rule.getStartColumn(), rule.getStartRow(), rule.getEndColumn(), rule.getEndRow(),
-               rule.getComment());
+       String additionalInformation = String.format("Comment: \"%s\"", rule.getComment());
        logBuilder.append(asComment(additionalInformation));
        logBuilder.append("\n");
        logBuilder.append(asComment(rule.getRuleString()));
@@ -144,7 +116,7 @@ public class GenerateAxiomsAction implements ActionListener
       if (!rootDir.endsWith(System.getProperty("file.separator"))) {
          rootDir += System.getProperty("file.separator");
       }
-      return new File(rootDir, "cellfie.log");
+      return new File(rootDir, "OntoPLC.log");
    }
 
    private String getLogHeader()
@@ -164,46 +136,6 @@ public class GenerateAxiomsAction implements ActionListener
    private String getDefaultRootDirectory()
    {
       return System.getProperty("java.io.tmpdir");
-   }
-
-   private int getStartColumnIndex(TransformationRule rule) throws Exception
-   {
-      String startColumn = rule.getStartColumn();
-      if (startColumn.isEmpty()) {
-         throw new CellfieException("Start column is not specified");
-      }
-      return SpreadSheetUtil.columnName2Number(startColumn);
-   }
-
-   private int getStartRowIndex(TransformationRule rule) throws Exception
-   {
-      String startRow = rule.getStartRow();
-      if (startRow.isEmpty()) {
-         throw new CellfieException("Start row is not specified");
-      }
-      return SpreadSheetUtil.rowLabel2Number(startRow);
-   }
-
-   private int getEndColumnIndex(TransformationRule rule, Sheet sheet, int startRowIndex) throws Exception
-   {
-      String endColumn = rule.getEndColumn();
-      if (endColumn.isEmpty()) {
-         throw new CellfieException("End column is not specified. (Hint: Use a wildcard '+' to indicate the last column)");
-      }
-      return rule.hasEndColumnWildcard()
-            ? sheet.getRow(startRowIndex).getLastCellNum() + 1
-            : SpreadSheetUtil.columnName2Number(endColumn);
-   }
-
-   private int getEndRowIndex(TransformationRule rule, Sheet sheet) throws Exception
-   {
-      String endRow = rule.getEndRow();
-      if (endRow.isEmpty()) {
-         throw new CellfieException("End row is not specified. (Hint: Use a wildcard '+' to indicate the last row)");
-      }
-      int endRowIndex = rule.hasEndRowWildcard() ? sheet.getLastRowNum() + 1
-            : SpreadSheetUtil.rowLabel2Number(endRow);
-      return endRowIndex;
    }
 
    private Set<OWLAxiom> toAxioms(Set<Rendering> results)
@@ -281,29 +213,6 @@ public class GenerateAxiomsAction implements ActionListener
       container.evaluate(rule, container.getDefaultRenderer(), results);
    }
 
-   private SpreadsheetLocation incrementLocation(SpreadsheetLocation current, SpreadsheetLocation start,
-         SpreadsheetLocation end) throws RendererException
-   {
-      if (current.getPhysicalRowNumber() < end.getPhysicalRowNumber()) {
-         return new SpreadsheetLocation(current.getSheetName(), current.getPhysicalColumnNumber(), current.getPhysicalRowNumber() + 1);
-      }
-      if (current.getPhysicalRowNumber() == end.getPhysicalRowNumber()) {
-         if (current.getPhysicalColumnNumber() < end.getPhysicalColumnNumber()) {
-            return new SpreadsheetLocation(current.getSheetName(), current.getPhysicalColumnNumber() + 1, start.getPhysicalRowNumber());
-         }
-      }
-      throw new RendererException("incrementLocation called redundantly");
-   }
-
-   private SpreadSheetDataSource getActiveWorkbook() throws CellfieException
-   {
-      SpreadSheetDataSource dataSource = container.getActiveWorkbook();
-      if (dataSource == null) {
-         throw new CellfieException("No workbook was loaded");
-      }
-      return dataSource;
-   }
-   
    private List<TransformationRule> getUserRules() throws CellfieException
    {
       List<TransformationRule> rules = container.getTransformationRuleBrowserView().getSelectedRules();

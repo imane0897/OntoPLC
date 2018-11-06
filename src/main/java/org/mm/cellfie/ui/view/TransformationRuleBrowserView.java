@@ -161,7 +161,7 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView {
 
             cmdGenerateAxioms = new JButton("Generate Axioms");
             cmdGenerateAxioms.setPreferredSize(new Dimension(152, 22));
-            // cmdGenerateAxioms.addActionListener(new GenerateAxiomsAction(container));
+            cmdGenerateAxioms.addActionListener(new GenerateAxiomsAction(container));
             cmdGenerateAxioms.setEnabled(false);
             pnlGenerateAxioms.add(cmdGenerateAxioms);
 
@@ -552,6 +552,10 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView {
             }
       }
 
+      public List<TransformationRule> getSelectedRules() {
+            return tableModel.getSelectedRules();
+      }
+      
       private DialogManager getApplicationDialogManager() {
             return container.getApplicationDialogManager();
       }

@@ -95,6 +95,16 @@ public class WorkspacePanel extends JPanel {
             validate();
       }
 
+      /**
+       * Get the file location of the input ontology.
+       *
+       * @return the file path location
+       */
+      public String getOntologyFileLocation() {
+            String iriString = ontology.getOWLOntologyManager().getOntologyDocumentIRI(ontology).toString();
+            return iriString.substring(iriString.indexOf(":") + 1, iriString.length());
+      }
+      
       private String getTitle(OWLOntology ontology) {
             if (ontology.getOntologyID().isAnonymous()) {
                   return ontology.getOntologyID().toString();
@@ -119,8 +129,37 @@ public class WorkspacePanel extends JPanel {
             return sb.toString();
       }
 
+      private void loadWorkbookDocument(String path) {
+            applicationFactory.setWorkbookFileLocation(path);
+      }
+
+      /**
+       * Get the file location of the input worksheet.
+       *
+       * @return the file path location
+       */
+      public String getWorkbookFileLocation() {
+            return applicationFactory.getWorkbookFileLocation();
+      }
+
       private MMApplicationModel getApplicationModel() {
             return application.getApplicationModel();
+      }
+
+      public void evaluate(TransformationRule rule, Renderer renderer, Set<Rendering> results) throws ParseException {
+            String ruleString = rule.getRuleString();
+            MappingMasterParser parser = new MappingMasterParser(new ByteArrayInputStream(ruleString.getBytes()),
+                        new ReferenceSettings(), -1);
+            SimpleNode simpleNode = parser.expression();
+            MMExpressionNode ruleNode = new ExpressionNode((ASTExpression) simpleNode).getMMExpressionNode();
+            Optional<? extends Rendering> renderingResult = renderer.render(ruleNode);
+            if (renderingResult.isPresent()) {
+                  results.add(renderingResult.get());
+            }
+      }
+
+      public OWLOntology getActiveOntology() {
+            return ontology;
       }
 
       public List<TransformationRule> getActiveTransformationRules() {
@@ -160,6 +199,10 @@ public class WorkspacePanel extends JPanel {
             return Optional.ofNullable(applicationFactory.getRuleFileLocation());
       }
 
+      public TransformationRuleBrowserView getTransformationRuleBrowserView() {
+            return transformationRuleBrowserView;
+      }
+      
       public static JDialog createDialog(OWLOntology ontology, String PLCFilePath, OWLEditorKit editorKit,
                   DialogManager dialogHelper) {
             final JDialog dialog = new JDialog(null, "OntoPLC", Dialog.ModalityType.MODELESS);
@@ -173,7 +216,7 @@ public class WorkspacePanel extends JPanel {
 
                   @Override
                   public void actionPerformed(ActionEvent e) {
-                        int answer = dialogHelper.showConfirmDialog(dialog, "Confirm Exit", "Exit Cellfie?");
+                        int answer = dialogHelper.showConfirmDialog(dialog, "Confirm Exit", "Exit OntoPLC?");
                         switch (answer) {
                         case JOptionPane.YES_OPTION:
                               // if (workspacePanel.shouldClose()) {

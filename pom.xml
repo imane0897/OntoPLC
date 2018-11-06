@@ -8,8 +8,8 @@
    </parent>
 
    <groupId>edu.stanford.protege</groupId>
-   <artifactId>cellfie</artifactId>
-   <version>2.1.0</version>
+   <artifactId>OntoPLC</artifactId>
+   <version>0.0.1</version>
    <packaging>bundle</packaging>
 
    <name>Cellfie Protege 5.0+ Plugin</name>
