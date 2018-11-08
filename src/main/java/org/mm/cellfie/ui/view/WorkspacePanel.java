@@ -28,11 +28,11 @@ import javax.swing.border.EmptyBorder;
 import org.mm.app.MMApplication;
 import org.mm.app.MMApplicationFactory;
 import org.mm.app.MMApplicationModel;
-// import org.mm.cellfie.action.OWLProtegeOntology;
+import org.mm.cellfie.action.OWLProtegeOntology;
 import org.mm.core.OWLOntologySourceHook;
-// import org.mm.core.TransformationRule;
+// import org.mm.cellfie.core.MMApplicationFactory;
 import org.mm.cellfie.core.TransformationRule;
-// import org.mm.core.TransformationRuleSet;
+import org.mm.cellfie.core.TransformationRuleSet;
 import org.mm.core.settings.ReferenceSettings;
 import org.mm.parser.ASTExpression;
 import org.mm.parser.MappingMasterParser;
@@ -85,6 +85,9 @@ public class WorkspacePanel extends JPanel {
             ViewSplitPane splitPane = new ViewSplitPane(JSplitPane.VERTICAL_SPLIT);
             splitPane.setResizeWeight(0.4);
             add(splitPane, BorderLayout.CENTER);
+
+            loadWorkbookDocument(PLCFilePath);
+            // setupApplication();
 
             /*
              * Transformation rule browser, create, edit, remove panel
@@ -199,6 +202,19 @@ public class WorkspacePanel extends JPanel {
             return Optional.ofNullable(applicationFactory.getRuleFileLocation());
       }
 
+      public void setRuleFileLocation(String path) {
+            applicationFactory.setRuleFileLocation(path);
+      }
+
+      private void setupApplication() {
+            try {
+                  OWLOntologySourceHook ontologySourceHook = new OWLProtegeOntology(getEditorKit());
+                  application = applicationFactory.createApplication(ontologySourceHook);
+            } catch (Exception e) {
+                  dialogHelper.showErrorMessageDialog(this, "Initialization error: " + e.getMessage());
+            }
+      }
+
       public TransformationRuleBrowserView getTransformationRuleBrowserView() {
             return transformationRuleBrowserView;
       }
@@ -219,9 +235,9 @@ public class WorkspacePanel extends JPanel {
                         int answer = dialogHelper.showConfirmDialog(dialog, "Confirm Exit", "Exit OntoPLC?");
                         switch (answer) {
                         case JOptionPane.YES_OPTION:
-                              // if (workspacePanel.shouldClose()) {
+                              if (workspacePanel.shouldClose()) {
                               dialog.setVisible(false);
-                              // }
+                              }
                         }
                   }
             });
@@ -230,14 +246,18 @@ public class WorkspacePanel extends JPanel {
             {
                   @Override
                   public void windowClosing(WindowEvent e) {
-                        // if (workspacePanel.shouldClose()) {
+                        if (workspacePanel.shouldClose()) {
                         dialog.setVisible(false);
-                        // }
+                        }
                   }
             });
             dialog.setContentPane(workspacePanel);
             dialog.setSize(1200, 900);
             dialog.setResizable(true);
             return dialog;
+      }
+
+      protected boolean shouldClose() {
+            return transformationRuleBrowserView.safeGuardChanges();
       }
 }

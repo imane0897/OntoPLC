@@ -46,8 +46,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
-// import org.mm.cellfie.ui.exception.CellfieException;
 import org.mm.cellfie.core.TransformationRule;
+import org.mm.cellfie.core.TransformationRuleSetFactory;
 import org.mm.ui.DialogManager;
 import org.mm.ui.ModelView;
 import org.protege.editor.core.ui.util.ComponentFactory;
@@ -133,7 +133,7 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView {
             cmdDelete = new JButton("Delete");
             cmdDelete.setPreferredSize(new Dimension(72, 22));
             cmdDelete.setEnabled(false);
-            // cmdDelete.addActionListener(new DeleteButtonActionListener());
+            cmdDelete.addActionListener(new DeleteButtonActionListener());
             pnlCommandButton.add(cmdDelete);
 
             JPanel pnlMappingOpenSave = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -141,13 +141,13 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView {
 
             cmdSave = new JButton("Save Rules");
             cmdSave.setPreferredSize(new Dimension(152, 22));
-            // cmdSave.addActionListener(new SaveMappingAction());
+            cmdSave.addActionListener(new SaveMappingAction());
             cmdSave.setEnabled(false);
             pnlMappingOpenSave.add(cmdSave);
 
             cmdSaveAs = new JButton("Save As...");
             cmdSaveAs.setPreferredSize(new Dimension(152, 22));
-            // cmdSaveAs.addActionListener(new SaveAsMappingAction());
+            cmdSaveAs.addActionListener(new SaveAsMappingAction());
             cmdSaveAs.setEnabled(false);
             pnlMappingOpenSave.add(cmdSaveAs);
 
@@ -184,6 +184,10 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView {
       private void setTableHeaderAlignment(int alignment) {
             ((DefaultTableCellRenderer) tblTransformationRules.getTableHeader().getDefaultRenderer())
                         .setHorizontalAlignment(alignment);
+      }
+
+      private void enableSaveButton() {
+            cmdSave.setEnabled(true);
       }
 
       private void updateBorderUI() {
@@ -555,7 +559,7 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView {
       public List<TransformationRule> getSelectedRules() {
             return tableModel.getSelectedRules();
       }
-      
+
       private DialogManager getApplicationDialogManager() {
             return container.getApplicationDialogManager();
       }
@@ -621,6 +625,16 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView {
             }
       }
 
+      private String getValueAt(int row, int column) {
+            return (String) tableModel.getValueAt(row, column);
+      }
+
+      private void validateSelection(int selectedRow) throws CellfieException {
+            if (selectedRow == -1) {
+                  throw new CellfieException("No transformation rule was selected");
+            }
+      }
+
       class SelectAllRulesAction extends AbstractAction {
             private static final long serialVersionUID = 1L;
 
@@ -651,13 +665,106 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView {
             }
       }
 
-      private String getValueAt(int row, int column) {
-            return (String) tableModel.getValueAt(row, column);
+      class SaveMappingAction implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                  doSave(container.getRuleFileLocation().get());
+            }
       }
 
-      private void validateSelection(int selectedRow) throws CellfieException {
-            if (selectedRow == -1) {
-                  throw new CellfieException("No transformation rule was selected");
+      class SaveAsMappingAction implements ActionListener {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                  if (doSelectFileAndSave()) {
+                        enableSaveButton();
+                        updateBorderUI();
+                  }
+            }
+      }
+
+      public boolean doSave(String filePath) {
+            boolean isSuccessful = true;
+            try {
+                  TransformationRuleSetFactory.saveTransformationRulesToDocument(filePath,
+                              tableModel.getTransformationRulesAndSave());
+                  container.updateTransformationRuleModel();
+            } catch (IOException e) {
+                  isSuccessful = false;
+                  getApplicationDialogManager().showErrorMessageDialog(container,
+                              "Error saving file: " + e.getMessage());
+            }
+            return isSuccessful;
+      }
+
+      public boolean doSelectFileAndSave() {
+            boolean isSuccessful = true;
+            File file = getApplicationDialogManager().showSaveFileChooser(container, "Save As", "json",
+                        "Transformation Rule File (.json)", true);
+            if (file != null) {
+                  String filePath = file.getAbsolutePath();
+                  String ext = ".json";
+                  if (!filePath.endsWith(ext)) {
+                        filePath = filePath + ext;
+                  }
+                  container.setRuleFileLocation(filePath);
+                  isSuccessful = doSave(filePath);
+            } else {
+                  isSuccessful = false;
+            }
+            return isSuccessful;
+      }
+
+      public boolean safeGuardChanges() {
+            boolean isSuccessful = true;
+            if (tableModel.hasUnsavedChanges()) {
+                  int answer = JOptionPane.showConfirmDialog(container,
+                              "There are unsaved changes in your transformation rules. Do you want to save them?",
+                              "Closing OntoPLC", JOptionPane.YES_NO_CANCEL_OPTION);
+                  switch (answer) {
+                  case JOptionPane.YES_OPTION:
+                        Optional<String> fileLocation = container.getRuleFileLocation();
+                        if (!fileLocation.isPresent()) {
+                              isSuccessful = doSelectFileAndSave();
+                        } else {
+                              isSuccessful = doSave(fileLocation.get());
+                        }
+                        if (isSuccessful) {
+                              getApplicationDialogManager().showMessageDialog(container,
+                                          "Transformation rules saved successfully");
+                        }
+                        break;
+                  case JOptionPane.CANCEL_OPTION:
+                        isSuccessful = false; // avoid closing
+                        break;
+                  }
+            }
+            return isSuccessful;
+      }
+
+      /**
+       * A helper class for creating mapping editor command buttons.
+       */
+      class SaveOption implements Comparable<SaveOption> {
+            private int option;
+            private String title;
+
+            public SaveOption(int option, String title) {
+                  this.option = option;
+                  this.title = title;
+            }
+
+            public int get() {
+                  return option;
+            }
+
+            @Override
+            public String toString() {
+                  return title;
+            }
+
+            @Override
+            public int compareTo(SaveOption o) {
+                  return option - o.option;
             }
       }
 }

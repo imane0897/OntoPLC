@@ -12,7 +12,7 @@
    <version>0.0.1</version>
    <packaging>bundle</packaging>
 
-   <name>Cellfie Protege 5.0+ Plugin</name>
+   <name>OntoPLC Protege 5.0+ Plugin</name>
    <description>MappingMaster plugin for Desktop Protege 5.0+</description>
    <url>https://github.com/protegeproject/cellfie-plugin/wiki</url>
    <licenses>

@@ -36,7 +36,7 @@ public class PreviewAxiomsPanel extends JPanel
       setLayout(new BorderLayout());
 
       JLabel lblPreview = new JLabel();
-      lblPreview.setText("Cellfie generates " + axioms.size() + " axioms:");
+      lblPreview.setText("OntoPLC generates " + axioms.size() + " axioms:");
       add(lblPreview, BorderLayout.NORTH);
 
       OWLAxiomList previewList = new OWLAxiomList(container.getEditorKit());
