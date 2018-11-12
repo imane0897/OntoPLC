@@ -12,7 +12,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
-import org.mm.cellfie.core.TransformationRule;
+import org.mm.core.TransformationRule;
 
 public class TransformationRuleEditorPanel extends JPanel {
       private static final long serialVersionUID = 1L;

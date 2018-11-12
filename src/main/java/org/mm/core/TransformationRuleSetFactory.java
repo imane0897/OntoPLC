@@ -1,4 +1,4 @@
-package org.mm.cellfie.core;
+package org.mm.core;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

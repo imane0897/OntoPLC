@@ -46,8 +46,8 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
-import org.mm.cellfie.core.TransformationRule;
-import org.mm.cellfie.core.TransformationRuleSetFactory;
+import org.mm.core.TransformationRule;
+import org.mm.core.TransformationRuleSetFactory;
 import org.mm.ui.DialogManager;
 import org.mm.ui.ModelView;
 import org.protege.editor.core.ui.util.ComponentFactory;

@@ -1,4 +1,4 @@
-package org.mm.cellfie.core;
+package org.mm.core;
 
 import java.util.Collections;
 import java.util.HashSet;

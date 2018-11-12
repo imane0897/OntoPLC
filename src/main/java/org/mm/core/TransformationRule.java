@@ -1,4 +1,4 @@
-package org.mm.cellfie.core;
+package org.mm.core;
 
 public class TransformationRule {
 

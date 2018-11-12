@@ -25,14 +25,16 @@ import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
-import org.mm.app.MMApplication;
-import org.mm.app.MMApplicationFactory;
-import org.mm.app.MMApplicationModel;
+// import org.mm.app.MMApplication;
+import org.mm.app.PLCApplication;
+// import org.mm.app.MMApplicationFactory;
+import org.mm.app.PLCApplicationFactory;
+// import org.mm.app.MMApplicationModel;
+import org.mm.app.PLCApplicationModel;
 import org.mm.cellfie.action.OWLProtegeOntology;
 import org.mm.core.OWLOntologySourceHook;
-// import org.mm.cellfie.core.MMApplicationFactory;
-import org.mm.cellfie.core.TransformationRule;
-import org.mm.cellfie.core.TransformationRuleSet;
+import org.mm.core.TransformationRule;
+import org.mm.core.TransformationRuleSet;
 import org.mm.core.settings.ReferenceSettings;
 import org.mm.parser.ASTExpression;
 import org.mm.parser.MappingMasterParser;
@@ -42,7 +44,7 @@ import org.mm.parser.node.ExpressionNode;
 import org.mm.parser.node.MMExpressionNode;
 import org.mm.renderer.Renderer;
 import org.mm.rendering.Rendering;
-import org.mm.ss.SpreadSheetDataSource;
+// import org.mm.ss.SpreadSheetDataSource;
 import org.mm.ui.DialogManager;
 import org.protege.editor.core.ui.split.ViewSplitPane;
 import org.protege.editor.owl.OWLEditorKit;
@@ -59,8 +61,8 @@ public class WorkspacePanel extends JPanel {
       private DialogManager dialogHelper;
       private TransformationRuleBrowserView transformationRuleBrowserView;
 
-      private MMApplication application;
-      private MMApplicationFactory applicationFactory = new MMApplicationFactory();
+      private PLCApplication application;
+      private PLCApplicationFactory applicationFactory = new PLCApplicationFactory();
 
       public WorkspacePanel(OWLOntology ontology, String PLCFilePath, OWLEditorKit editorKit,
                   DialogManager dialogHelper) {
@@ -145,7 +147,7 @@ public class WorkspacePanel extends JPanel {
             return applicationFactory.getWorkbookFileLocation();
       }
 
-      private MMApplicationModel getApplicationModel() {
+      private PLCApplicationModel getApplicationModel() {
             return application.getApplicationModel();
       }
 
