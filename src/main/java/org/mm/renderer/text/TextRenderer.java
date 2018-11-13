@@ -503,7 +503,7 @@ public class TextRenderer extends ReferenceRendererConfiguration implements Rend
             OWLIndividualDeclarationNode individualDeclarationNode) throws RendererException {
         StringBuilder textRepresentation = new StringBuilder();
         Optional<? extends TextRendering> textRenderingResult = null;
-
+        
         /*
          * Rendering OWL Individual.
          */
@@ -543,6 +543,7 @@ public class TextRenderer extends ReferenceRendererConfiguration implements Rend
             }
             textRepresentation.append(NEWLINE);
         }
+
         /*
          * Rendering OWL Individual's types
          */
@@ -558,6 +559,7 @@ public class TextRenderer extends ReferenceRendererConfiguration implements Rend
                 textRepresentation.append(NEWLINE);
             }
         }
+
         /*
          * Rendering OWL Individual's annotations
          */
@@ -582,6 +584,7 @@ public class TextRenderer extends ReferenceRendererConfiguration implements Rend
             }
             textRepresentation.append(NEWLINE);
         }
+
         /*
          * Rendering OWL Individual's hasSameAs axiom
          */
@@ -593,6 +596,7 @@ public class TextRenderer extends ReferenceRendererConfiguration implements Rend
                 textRepresentation.append(NEWLINE);
             }
         }
+
         /*
          * Rendering OWL Individuals' hasDifferentFrom axiom
          */
@@ -604,6 +608,7 @@ public class TextRenderer extends ReferenceRendererConfiguration implements Rend
                 textRepresentation.append(NEWLINE);
             }
         }
+
         return Optional.of(new TextRendering(textRepresentation.toString()));
     }
 

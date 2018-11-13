@@ -89,7 +89,7 @@ public class WorkspacePanel extends JPanel {
             add(splitPane, BorderLayout.CENTER);
 
             loadWorkbookDocument(PLCFilePath);
-            // setupApplication();
+            setupApplication();
 
             /*
              * Transformation rule browser, create, edit, remove panel
@@ -173,10 +173,10 @@ public class WorkspacePanel extends JPanel {
       }
 
       /* package */ void updateTransformationRuleModel() {
-            // final List<TransformationRule> rules =
-            // getTransformationRuleBrowserView().getSelectedRules();
-            // TransformationRuleSet ruleSet = TransformationRuleSet.create(rules);
-            // getApplicationModel().getTransformationRuleModel().changeTransformationRuleSet(ruleSet);
+            final List<TransformationRule> rules =
+            getTransformationRuleBrowserView().getSelectedRules();
+            TransformationRuleSet ruleSet = TransformationRuleSet.create(rules);
+            getApplicationModel().getTransformationRuleModel().changeTransformationRuleSet(ruleSet);
       }
 
       public Renderer getDefaultRenderer() {

@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.Renderer;
 
 // import org.apache.poi.ss.usermodel.Sheet;
 import org.mm.core.TransformationRule;
@@ -70,7 +71,7 @@ public class GenerateAxiomsAction implements ActionListener {
                         if (rule.isActive()) {
                               logExpression(rule, logBuilder);
                               // do {
-                              // evaluate(rule, results);
+                              evaluate(rule, results);
                               logEvaluation(rule, logBuilder);
                               // } while (true);
                         }
@@ -81,7 +82,7 @@ public class GenerateAxiomsAction implements ActionListener {
                   LogUtils.save(getLoggingFile(), logMessage, true);
 
                   // Show the preview dialog to users to see all the generated axioms
-                  // showAxiomPreviewDialog(toAxioms(results), logMessage);
+                  showAxiomPreviewDialog(toAxioms(results), logMessage);
             } catch (Exception ex) {
                   getApplicationDialogManager().showErrorMessageDialog(container, ex.getMessage());
             }
@@ -199,7 +200,7 @@ public class GenerateAxiomsAction implements ActionListener {
       }
 
       private void evaluate(TransformationRule rule, Set<Rendering> results) throws ParseException {
-            // container.evaluate(rule, container.getDefaultRenderer(), results);
+            container.evaluate(rule, container.getDefaultRenderer(), results);
       }
 
       private List<TransformationRule> getUserRules() throws CellfieException {
@@ -223,7 +224,6 @@ public class GenerateAxiomsAction implements ActionListener {
             if (renderingResult.isPresent()) {
                   logBuilder.append(renderingResult.get().getRendering());
             }
-            logBuilder.append(ruleString);
       }
 
       private ReferenceSettings getReferenceSettings() {
