@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,8 @@ import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
+import org.dom4j.Document;
+import org.dom4j.io.SAXReader;
 // import org.mm.app.MMApplication;
 import org.mm.app.PLCApplication;
 // import org.mm.app.MMApplicationFactory;
@@ -109,7 +112,7 @@ public class WorkspacePanel extends JPanel {
             String iriString = ontology.getOWLOntologyManager().getOntologyDocumentIRI(ontology).toString();
             return iriString.substring(iriString.indexOf(":") + 1, iriString.length());
       }
-      
+
       private String getTitle(OWLOntology ontology) {
             if (ontology.getOntologyID().isAnonymous()) {
                   return ontology.getOntologyID().toString();
@@ -169,12 +172,26 @@ public class WorkspacePanel extends JPanel {
 
       public List<TransformationRule> getActiveTransformationRules() {
             List<TransformationRule> PLCTransformationRule = new ArrayList<>();
+            String filePath = "/Users/aym/Downloads/fbdxml.xml";
+            File file = new File(filePath);
+            SAXReader reader = new SAXReader();
+            try {
+                  Document document = reader.read(file);
+                  PLCXMLParser p = new PLCXMLParser();
+                  Set<String> ruleStrings = p.treeWalk(document);
+                  for (String s:ruleStrings) {
+                        TransformationRule n = new TransformationRule("", s);
+                        PLCTransformationRule.add(n);
+                  }
+                  
+            } catch (Exception e) {
+                  return PLCTransformationRule;
+            }
             return PLCTransformationRule;
       }
 
       /* package */ void updateTransformationRuleModel() {
-            final List<TransformationRule> rules =
-            getTransformationRuleBrowserView().getSelectedRules();
+            final List<TransformationRule> rules = getTransformationRuleBrowserView().getSelectedRules();
             TransformationRuleSet ruleSet = TransformationRuleSet.create(rules);
             getApplicationModel().getTransformationRuleModel().changeTransformationRuleSet(ruleSet);
       }
@@ -220,7 +237,7 @@ public class WorkspacePanel extends JPanel {
       public TransformationRuleBrowserView getTransformationRuleBrowserView() {
             return transformationRuleBrowserView;
       }
-      
+
       public static JDialog createDialog(OWLOntology ontology, String PLCFilePath, OWLEditorKit editorKit,
                   DialogManager dialogHelper) {
             final JDialog dialog = new JDialog(null, "OntoPLC", Dialog.ModalityType.MODELESS);
@@ -238,7 +255,7 @@ public class WorkspacePanel extends JPanel {
                         switch (answer) {
                         case JOptionPane.YES_OPTION:
                               if (workspacePanel.shouldClose()) {
-                              dialog.setVisible(false);
+                                    dialog.setVisible(false);
                               }
                         }
                   }
@@ -249,7 +266,7 @@ public class WorkspacePanel extends JPanel {
                   @Override
                   public void windowClosing(WindowEvent e) {
                         if (workspacePanel.shouldClose()) {
-                        dialog.setVisible(false);
+                              dialog.setVisible(false);
                         }
                   }
             });
