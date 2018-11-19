@@ -17,6 +17,9 @@ public class PLCXMLParser {
 
         @Override
         public String toString() {
+            if(parentName.isEmpty()) {
+                return "Class: " + nodeName;
+            }
             return "Class: " + nodeName + "\n" + "SubClassOf: " + parentName;
         }
     };
