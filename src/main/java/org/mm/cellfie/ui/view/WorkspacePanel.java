@@ -67,7 +67,7 @@ public class WorkspacePanel extends JPanel {
       private PLCApplication application;
       private PLCApplicationFactory applicationFactory = new PLCApplicationFactory();
 
-      public WorkspacePanel(OWLOntology ontology, String PLCFilePath, OWLEditorKit editorKit,
+      public WorkspacePanel(OWLOntology ontology, String xmlFilePath, OWLEditorKit editorKit,
                   DialogManager dialogHelper) {
             this.ontology = ontology;
             this.editorKit = editorKit;
@@ -91,13 +91,13 @@ public class WorkspacePanel extends JPanel {
             splitPane.setResizeWeight(0.4);
             add(splitPane, BorderLayout.CENTER);
 
-            loadWorkbookDocument(PLCFilePath);
+            loadWorkbookDocument(xmlFilePath);
             setupApplication();
 
             /*
              * Transformation rule browser, create, edit, remove panel
              */
-            transformationRuleBrowserView = new TransformationRuleBrowserView(this);
+            transformationRuleBrowserView = new TransformationRuleBrowserView(this, xmlFilePath);
             splitPane.setBottomComponent(transformationRuleBrowserView);
 
             validate();
@@ -170,10 +170,9 @@ public class WorkspacePanel extends JPanel {
             return ontology;
       }
 
-      public List<TransformationRule> getActiveTransformationRules() {
+      public List<TransformationRule> getActiveTransformationRules(String xmlFilePath) {
             List<TransformationRule> PLCTransformationRule = new ArrayList<>();
-            String filePath = "/Users/aym/Downloads/fbdxml.xml";
-            File file = new File(filePath);
+            File file = new File(xmlFilePath);
             SAXReader reader = new SAXReader();
             try {
                   Document document = reader.read(file);
@@ -238,11 +237,11 @@ public class WorkspacePanel extends JPanel {
             return transformationRuleBrowserView;
       }
 
-      public static JDialog createDialog(OWLOntology ontology, String PLCFilePath, OWLEditorKit editorKit,
+      public static JDialog createDialog(OWLOntology ontology, String xmlFilePath, OWLEditorKit editorKit,
                   DialogManager dialogHelper) {
             final JDialog dialog = new JDialog(null, "OntoPLC", Dialog.ModalityType.MODELESS);
 
-            final WorkspacePanel workspacePanel = new WorkspacePanel(ontology, PLCFilePath, editorKit, dialogHelper);
+            final WorkspacePanel workspacePanel = new WorkspacePanel(ontology, xmlFilePath, editorKit, dialogHelper);
             workspacePanel.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT)
                         .put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "CLOSE_DIALOG");
             workspacePanel.getActionMap().put("CLOSE_DIALOG", new AbstractAction() // Closing Cellfie using ESC key

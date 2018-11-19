@@ -53,7 +53,7 @@ import org.mm.ui.ModelView;
 import org.protege.editor.core.ui.util.ComponentFactory;
 import org.protege.editor.core.ui.util.JOptionPaneEx;
 
-public class TransformationRuleBrowserView extends JPanel implements ModelView {
+public class TransformationRuleBrowserView extends JPanel {
       private static final long serialVersionUID = 1L;
 
       private WorkspacePanel container;
@@ -72,7 +72,7 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView {
 
       private TransformationRulesTableModel tableModel;
 
-      public TransformationRuleBrowserView(WorkspacePanel container) {
+      public TransformationRuleBrowserView(WorkspacePanel container, String xmlFilePath) {
             this.container = container;
 
             setLayout(new BorderLayout());
@@ -165,13 +165,12 @@ public class TransformationRuleBrowserView extends JPanel implements ModelView {
             cmdGenerateAxioms.setEnabled(true);
             pnlGenerateAxioms.add(cmdGenerateAxioms);
 
-            update();
+            update(xmlFilePath);
             validate();
       }
 
-      @Override
-      public void update() {
-            tableModel = new TransformationRulesTableModel(container.getActiveTransformationRules());
+      public void update(String xmlFilePath) {
+            tableModel = new TransformationRulesTableModel(container.getActiveTransformationRules(xmlFilePath));
             tblTransformationRules.setModel(tableModel);
             tblTransformationRules.getColumnModel().getColumn(0).setHeaderRenderer(tblHeaderRenderer);
             setTableHeaderAlignment(SwingConstants.CENTER);
