@@ -9,7 +9,7 @@
 
    <groupId>edu.stanford.protege</groupId>
    <artifactId>OntoPLC</artifactId>
-   <version>0.0.1</version>
+   <version>0.1.15</version>
    <packaging>bundle</packaging>
 
    <name>OntoPLC Protege 5.0+ Plugin</name>
@@ -103,7 +103,7 @@
                      org.protege.editor.core.*;version="5.0.0",
                      org.protege.editor.owl.*;version="5.0.0",
                      !com.google.gson.*,
-                     !org.gjt.xpp.*;version="2.1.0", 
+                     !org.gjt.xpp.*;version="2.1.0",
                      !org.jaxen.*;version="1.1.6",
                      !org.relaxng.datatype,
                      !org.xmlpull.v1,
