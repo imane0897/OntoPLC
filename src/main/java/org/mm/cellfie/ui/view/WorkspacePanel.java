@@ -176,7 +176,7 @@ public class WorkspacePanel extends JPanel {
             SAXReader reader = new SAXReader();
             try {
                   Document document = reader.read(file);
-                  PLCXMLParser p = new PLCXMLParser();
+                  PlcXmlParser p = new PlcXmlParser();
                   Set<String> ruleStrings = p.treeWalk(document);
                   for (String s:ruleStrings) {
                         TransformationRule n = new TransformationRule("", s);

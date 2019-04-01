@@ -140,11 +140,11 @@ public class TransformationRuleBrowserView extends JPanel {
     JPanel pnlMappingOpenSave = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     pnlTop.add(pnlMappingOpenSave, BorderLayout.EAST);
 
-    cmdLoad = new JButton("Load XML Schema");
-    cmdLoad.setPreferredSize(new Dimension(152, 22));
-    cmdLoad.addActionListener(new SaveMappingAction());
-    cmdLoad.setEnabled(true);
-    pnlMappingOpenSave.add(cmdLoad);
+    // cmdLoad = new JButton("Load XML Schema");
+    // cmdLoad.setPreferredSize(new Dimension(152, 22));
+    // cmdLoad.addActionListener(new SaveMappingAction());
+    // cmdLoad.setEnabled(true);
+    // pnlMappingOpenSave.add(cmdLoad);
 
     cmdSave = new JButton("Save Rules");
     cmdSave.setPreferredSize(new Dimension(152, 22));

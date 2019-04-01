@@ -12,7 +12,6 @@ import java.util.Set;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.Renderer;
 
 // import org.apache.poi.ss.usermodel.Sheet;
 import org.mm.core.TransformationRule;

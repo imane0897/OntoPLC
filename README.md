@@ -18,7 +18,7 @@ Get a copy of the latest code:
 git clone https://github.com/imane0897/OntoPLC.git
 ```
 
-Change into the cellfie-plugin directory:
+Change into the OntoPLC-plugin directory:
 
 ```
 cd OntoPLC
@@ -38,4 +38,4 @@ To install in your local Protégé, copy this JAR file to the ```plugins``` subd
 User's Guide
 ------------
 
-To start working with Cellfie, first load your working ontology in Protégé and find the plugin in menu selection **Tools > OntoPLC**
+To start working with OntoPLC, first load your working ontology in Protégé and find the plugin in menu selection **Tools > OntoPLC**
