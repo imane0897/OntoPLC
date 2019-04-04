@@ -177,12 +177,11 @@ public class WorkspacePanel extends JPanel {
             try {
                   Document document = reader.read(file);
                   PlcXmlParser p = new PlcXmlParser();
-                  Set<String> ruleStrings = p.treeWalk(document);
+                  Set<String> ruleStrings = p.parseXml(document);
                   for (String s:ruleStrings) {
                         TransformationRule n = new TransformationRule("", s);
                         PLCTransformationRule.add(n);
                   }
-                  
             } catch (Exception e) {
                   return PLCTransformationRule;
             }
