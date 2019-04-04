@@ -50,6 +50,12 @@
          <artifactId>dom4j</artifactId>
          <version>1.6.1</version>
       </dependency>
+      <!-- https://mvnrepository.com/artifact/jaxen/jaxen -->
+      <dependency>
+        <groupId>jaxen</groupId>
+        <artifactId>jaxen</artifactId>
+        <version>1.1.6</version>
+      </dependency>
    </dependencies>
 
    <build>
@@ -84,6 +90,7 @@
                      xmlbeans,
                      gson,
                      mapping-master,
+                     jaxen,
                      dom4j
                   </Embed-Dependency>
                   <_exportcontents> <!-- required to avoid 'private references' warning -->
@@ -100,7 +107,7 @@
                      repackage
                   </_exportcontents>
                   <Import-Package>
-                     org.protege.editor.core.*;version="5.0.0",
+                     <!-- org.protege.editor.core.*;version="5.0.0",
                      org.protege.editor.owl.*;version="5.0.0",
                      !com.google.gson.*,
                      !org.gjt.xpp.*;version="2.1.0",
@@ -117,7 +124,8 @@
                      schemasMicrosoftCom*;resolution:=optional,
                      com.sun.*;resolution:=optional,
                      javax.*;resolution:=optional,
-                     *
+                     * -->
+                     *;resolution:=optional
                   </Import-Package>
                   <Include-Resource>plugin.xml, {maven-dependencies}, {maven-resources}</Include-Resource>
                </instructions>
