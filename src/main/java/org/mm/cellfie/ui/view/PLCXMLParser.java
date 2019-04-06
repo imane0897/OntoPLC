@@ -41,6 +41,17 @@ public class PlcXmlParser {
   }
 
   public Set<String> parseXml(Document document) {
+    Node node = document.selectSingleNode("//*[local-name()='fileHeader']");
+    Element element = (Element) node;
+    if (element.attributeValue("companyName").equals("Beremiz")) {
+      parseBeremizXml(document);
+    } else if (element.attributeValue("productName").equals("CoDeSys")) {
+      parseCodesysXml(document);
+    }
+    return ruleTree;
+  }
+
+  public void parseBeremizXml(Document document) {
     List<Node> variableList = document.selectNodes("//*[local-name()='variable'][@name]");
     for (Iterator<Node> iter = variableList.iterator(); iter.hasNext();) {
       Element element = (Element) iter.next();
@@ -60,6 +71,12 @@ public class PlcXmlParser {
       n.facts = "hasLocalId " + element.attributeValue("localId");
       n.facts += "\nFacts: hasHeight " + element.attributeValue("height");
       n.facts += "\nFacts: hasWidth " + element.attributeValue("width");
+      Node childNode = element.selectSingleNode("*[local-name()='position']");
+      if (childNode != null) {
+        Element position = (Element) childNode;
+        n.facts += "\nFacts: hasPositionX " + position.attributeValue("x");
+        n.facts += "\nFacts: hasPositionY " + position.attributeValue("y");
+      }
       ruleTree.add(n.toString());
     }
 
@@ -72,6 +89,12 @@ public class PlcXmlParser {
       n.facts = "hasLocalId " + element.attributeValue("localId");
       n.facts += "\nFacts: hasHeight " + element.attributeValue("height");
       n.facts += "\nFacts: hasWidth " + element.attributeValue("width");
+      Node childNode = element.selectSingleNode("*[local-name()='position']");
+      if (childNode != null) {
+        Element position = (Element) childNode;
+        n.facts += "\nFacts: hasPositionX " + position.attributeValue("x");
+        n.facts += "\nFacts: hasPositionY " + position.attributeValue("y");
+      }
       ruleTree.add(n.toString());
     }
 
@@ -87,6 +110,12 @@ public class PlcXmlParser {
       if (element.attributeValue("negated") != null) {
         n.facts += "\nFacts: isNegatedContact " + element.attributeValue("negated");
       }
+      Node childNode = element.selectSingleNode("*[local-name()='position']");
+      if (childNode != null) {
+        Element position = (Element) childNode;
+        n.facts += "\nFacts: hasPositionX " + position.attributeValue("x");
+        n.facts += "\nFacts: hasPositionY " + position.attributeValue("y");
+      }
       ruleTree.add(n.toString());
     }
 
@@ -100,6 +129,12 @@ public class PlcXmlParser {
       n.facts += "\nFacts: hasHeight " + element.attributeValue("height");
       n.facts += "\nFacts: hasWidth " + element.attributeValue("width");
       n.facts += "\nFacts: hasCoilType \"" + element.attributeValue("storage") + "\"";
+      Node childNode = element.selectSingleNode("*[local-name()='position']");
+      if (childNode != null) {
+        Element position = (Element) childNode;
+        n.facts += "\nFacts: hasPositionX " + position.attributeValue("x");
+        n.facts += "\nFacts: hasPositionY " + position.attributeValue("y");
+      }
       ruleTree.add(n.toString());
     }
 
@@ -120,6 +155,12 @@ public class PlcXmlParser {
       if (element.attributeValue("instanceName") != null) {
         n.facts += "\nFacts: hasInstanceName \"" + element.attributeValue("instanceName") + "\"";
       }
+      Node childNode = element.selectSingleNode("*[local-name()='position']");
+      if (childNode != null) {
+        Element position = (Element) childNode;
+        n.facts += "\nFacts: hasPositionX " + position.attributeValue("x");
+        n.facts += "\nFacts: hasPositionY " + position.attributeValue("y");
+      }
       ruleTree.add(n.toString());
     }
 
@@ -131,7 +172,6 @@ public class PlcXmlParser {
       n.typeName = "POU";
       n.facts = "hasPouName \"" + element.attributeValue("name") + "\"";
       n.facts += "\nFacts: hasPouType \"" + element.attributeValue("pouType") + "\"";
-      ruleTree.add(n.toString());
       ruleTree.add(n.toString());
     }
 
@@ -158,6 +198,12 @@ public class PlcXmlParser {
       n.individualName = "Transition" + element.attributeValue("localId");
       n.typeName = "Transition";
       n.facts = "hasLocalId " + element.attributeValue("localId");
+      Node childNode = element.selectSingleNode("*[local-name()='position']");
+      if (childNode != null) {
+        Element position = (Element) childNode;
+        n.facts += "\nFacts: hasPositionX " + position.attributeValue("x");
+        n.facts += "\nFacts: hasPositionY " + position.attributeValue("y");
+      }
       ruleTree.add(n.toString());
     }
 
@@ -167,13 +213,22 @@ public class PlcXmlParser {
       RuleTreeNode n = new RuleTreeNode();
       n.individualName = "Step" + element.attributeValue("localId");
       n.typeName = "Step";
-      n.facts = "hasLocalId" + element.attributeValue("localId");
+      n.facts = "hasLocalId " + element.attributeValue("localId");
       n.facts += "\nFacts: hasStepName \"" + element.attributeValue("name") + "\"";
       if (element.attributeValue("initialStep") != null) {
         n.facts += "\nFacts: isInitialStep \"" + element.attributeValue("initialStep") + "\"";
       }
+      Node childNode = element.selectSingleNode("*[local-name()='position']");
+      if (childNode != null) {
+        Element position = (Element) childNode;
+        n.facts += "\nFacts: hasPositionX " + position.attributeValue("x");
+        n.facts += "\nFacts: hasPositionY " + position.attributeValue("y");
+      }
+      ruleTree.add(n.toString());
     }
+  }
 
-    return ruleTree;
+  public void parseCodesysXml(Document document) {
+
   }
 }
