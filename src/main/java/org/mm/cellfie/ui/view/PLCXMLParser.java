@@ -244,7 +244,7 @@ public class PlcXmlParser {
     }
 
     List<Node> stepList = document.selectNodes("//*[local-name()='step']");
-    for (Iterator<Node> iter = transitionList.iterator(); iter.hasNext();) {
+    for (Iterator<Node> iter = stepList.iterator(); iter.hasNext();) {
       Element element = (Element) iter.next();
       RuleTreeNode n = new RuleTreeNode();
       n.individualName = "Step" + element.attributeValue("localId");
