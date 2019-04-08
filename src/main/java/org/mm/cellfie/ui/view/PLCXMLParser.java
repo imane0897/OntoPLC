@@ -52,6 +52,17 @@ public class PlcXmlParser {
   }
 
   public void parseBeremizXml(Document document) {
+    List<Node> pouList = document.selectNodes("//*[local-name()='pou']");
+    for (Iterator<Node> iter = pouList.iterator(); iter.hasNext();) {
+      Element element = (Element) iter.next();
+      RuleTreeNode n = new RuleTreeNode();
+      n.individualName = "Pou_" + element.attributeValue("name");
+      n.typeName = "POU";
+      n.facts = "hasPouName \"" + element.attributeValue("name") + "\"";
+      n.facts += "\nFacts: hasPouType \"" + element.attributeValue("pouType") + "\"";
+      ruleTree.add(n.toString());
+    }
+
     List<Node> variableList = document.selectNodes("//*[local-name()='variable'][@name]");
     for (Iterator<Node> iter = variableList.iterator(); iter.hasNext();) {
       Element element = (Element) iter.next();
@@ -155,23 +166,48 @@ public class PlcXmlParser {
       if (element.attributeValue("instanceName") != null) {
         n.facts += "\nFacts: hasInstanceName \"" + element.attributeValue("instanceName") + "\"";
       }
+      // position
       Node childNode = element.selectSingleNode("*[local-name()='position']");
       if (childNode != null) {
         Element position = (Element) childNode;
         n.facts += "\nFacts: hasPositionX " + position.attributeValue("x");
         n.facts += "\nFacts: hasPositionY " + position.attributeValue("y");
       }
+      // inputVariables
+      childNode = element.selectSingleNode("*[local-name()='inputVariables']");
+      if (childNode != null) {
+        List<Node> inputVariables = childNode.selectNodes("*");
+        for (Iterator<Node> var = inputVariables.iterator(); var.hasNext();) {
+          Element varElement = (Element) var.next();
+          n.facts += "\nFacts: hasInputVariable \"" + varElement.attributeValue("formalParameter") + "\"";
+        }
+      }
+      // outputVariables
+      childNode = element.selectSingleNode("*[local-name()='outputVariables']");
+      if (childNode != null) {
+        List<Node> outputVariables = childNode.selectNodes("*");
+        for (Iterator<Node> var = outputVariables.iterator(); var.hasNext();) {
+          Element varElement = (Element) var.next();
+          n.facts += "\nFacts: hasOutputVariable \"" + varElement.attributeValue("formalParameter") + "\"";
+        }
+      }
       ruleTree.add(n.toString());
     }
 
-    List<Node> pouList = document.selectNodes("//*[local-name()='pou']");
-    for (Iterator<Node> iter = pouList.iterator(); iter.hasNext();) {
+    List<Node> inVariableList = document.selectNodes("//*[local-name()='inVariable'][@localId]");
+    for (Iterator<Node> iter = inVariableList.iterator(); iter.hasNext();){
       Element element = (Element) iter.next();
       RuleTreeNode n = new RuleTreeNode();
-      n.individualName = "Pou_" + element.attributeValue("name");
-      n.typeName = "POU";
-      n.facts = "hasPouName \"" + element.attributeValue("name") + "\"";
-      n.facts += "\nFacts: hasPouType \"" + element.attributeValue("pouType") + "\"";
+      n.individualName = "Variable" + element.attributeValue("localId");
+      n.typeName = "Variable";
+      n.facts = "hasHeight " + element.attributeValue("height");
+      n.facts += "\nFacts: hasWidth " + element.attributeValue("width");
+      if (element.attributeValue("executionOrderId") != null) {
+        n.facts += "\nFacts: hasExecutionOrderId " + element.attributeValue("executionOrderId");
+      }
+      if (element.attributeValue("negated") != null) {
+        n.facts += "\nFacts: isNegated " + element.attributeValue("negated");
+      }
       ruleTree.add(n.toString());
     }
 
